@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Articles Quiz - Detailed Feedback</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body {
+    margin: 0; padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f7f9fc;
+    color: #222;
+  }
+  .quiz-container {
+    max-width: 670px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  }
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1976d2;
+  }
+  ol { padding-left: 18px; }
+  li {
+    margin-bottom: 25px;
+    font-size: 1.05rem;
+  }
+  input[type="text"] {
+    width: 110px;
+    padding: 7px 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus {
+    border-color: #1976d2;
+    outline: none;
+  }
+  .submit-btn, #retry-btn {
+    display: block;
+    width: 100%;
+    background: #1976d2;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .submit-btn:hover, #retry-btn:hover {
+    background: #125a9e;
+  }
+  .feedback {
+    margin-top: 8px;
+    font-weight: 600;
+    min-height: 24px;
+  }
+  .correct-feedback {
+    color: #2e7d32;
+  }
+  .wrong-feedback {
+    color: #c62828;
+  }
+  .explanation {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2>Articles (a / an / the) Quiz - Fill in the blanks</h2>
+  <form id="quiz-form">
+    <ol>
+      <li>
+        She is <input type="text" id="q1" autocomplete="off" /> European writer known for her unique style.
+        <div id="feedback-q1" class="feedback"></div>
+      </li>
+      <li>
+        I had <input type="text" id="q2" autocomplete="off" /> unique opportunity to attend the international summit.
+        <div id="feedback-q2" class="feedback"></div>
+      </li>
+      <li>
+        Suresh is <input type="text" id="q3" autocomplete="off" /> boy who has got a place in the merit list.
+        <div id="feedback-q3" class="feedback"></div>
+      </li>
+      <li>
+        He was reading <input type="text" id="q4" autocomplete="off" /> Times of India when I entered the room.
+        <div id="feedback-q4" class="feedback"></div>
+      </li>
+      <li>
+        He is <input type="text" id="q5" autocomplete="off" /> MBA.
+        <div id="feedback-q5" class="feedback"></div>
+      </li>
+      <li>
+        He acts as if he is <input type="text" id="q6" autocomplete="off" /> Einstein of our school.
+        <div id="feedback-q6" class="feedback"></div>
+      </li>
+      <li>
+        I finally met <input type="text" id="q7" autocomplete="off" /> Priya who topped the board exams.
+        <div id="feedback-q7" class="feedback"></div>
+      </li>
+      <li>
+        Have you ever seen <input type="text" id="q8" autocomplete="off" /> Red Fort in Delhi?
+        <div id="feedback-q8" class="feedback"></div>
+      </li>
+      <li>
+        Ramesh is eating <input type="text" id="q9" autocomplete="off" /> orange.
+        <div id="feedback-q9" class="feedback"></div>
+      </li>
+      <li>
+        There is <input type="text" id="q10" autocomplete="off" /> cat sitting on the wall.
+        <div id="feedback-q10" class="feedback"></div>
+      </li>
+    </ol>
+    <button type="button" class="submit-btn" id="submit-btn">Submit Answers</button>
+  </form>
+
+  <button id="retry-btn" style="display:none;">🔄 Retry Quiz</button>
+</div>
+
+<script>
+const answers = {
+  q1: "a",
+  q2: "a",
+  q3: "a",
+  q4: "the",
+  q5: "an",
+  q6: "an",
+  q7: "the",
+  q8: "the",
+  q9: "an",
+  q10: "a"
+};
+
+const explanations = {
+  q1: "Use 'a' because European starts with consonant sound 'y'.",
+  q2: "'Unique' starts with 'y' sound, so use 'a'.",
+  q3: "Use 'a' before general singular countable nouns.",
+  q4: "'The Times of India' is a specific newspaper.",
+  q5: "'MBA' starts with vowel sound 'em', so use 'an'.",
+  q6: "'Einstein' starts with vowel sound 'ay', so 'an' is used.",
+  q7: "'The' used before a particular person identifier.",
+  q8: "'The Red Fort' is a specific monument.",
+  q9: "'Orange' here refers to the fruit, starts with vowel sound, use 'an'.",
+  q10: "'A' is used before consonant sound, here 'cat'."
+};
+
+const form = document.getElementById("quiz-form");
+const retryBtn = document.getElementById("retry-btn");
+const submitBtn = document.getElementById("submit-btn");
+
+submitBtn.addEventListener("click", () => {
+  let total = Object.keys(answers).length;
+  let correctCount = 0;
+
+  for (let i = 1; i <= total; i++) {
+    const input = document.getElementById(`q${i}`);
+    const feedbackDiv = document.getElementById(`feedback-q${i}`);
+    let userAnswer = input.value.trim().toLowerCase();
+    let correctAnswer = answers[`q${i}`];
+
+    input.style.borderColor = "#ddd";
+    feedbackDiv.textContent = "";
+
+    if (userAnswer === correctAnswer) {
+      correctCount++;
+      input.style.borderColor = "green";
+      feedbackDiv.className = "feedback correct-feedback";
+      feedbackDiv.textContent = "Correct ✅";
+    } else {
+      input.style.borderColor = "red";
+      feedbackDiv.className = "feedback wrong-feedback";
+      feedbackDiv.innerHTML = `Wrong ❌<br><small>Correct answer: '${correctAnswer.toUpperCase()}' - ${explanations[`q${i}`]}</small>`;
+    }
+  }
+
+  submitBtn.style.display = "none";
+  retryBtn.style.display = "block";
+
+  const overallFeedback = document.createElement("div");
+  overallFeedback.style.marginTop = "20px";
+  overallFeedback.style.fontWeight = "700";
+  overallFeedback.textContent = `Your Score: ${correctCount} / ${total}`;
+  form.appendChild(overallFeedback);
+});
+
+retryBtn.addEventListener("click", () => {
+  for(let i=1; i<=Object.keys(answers).length; i++){
+    const input = document.getElementById(`q${i}`);
+    const feedbackDiv = document.getElementById(`feedback-q${i}`);
+    input.value = "";
+    input.style.borderColor = "#ddd";
+    feedbackDiv.textContent = "";
+    feedbackDiv.className = "feedback";
+  }
+  const overallFeedback = document.querySelector(".quiz-container div:last-child strong, .quiz-container div:last-child");
+  if(overallFeedback){
+    overallFeedback.remove();
+  }
+  submitBtn.style.display = "block";
+  retryBtn.style.display = "none";
+});
+</script>
+</body>
+</html>
